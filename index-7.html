@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0B1810">
+<title>APRIL Nursery</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+:root{--bg:#0B1810;--pn:#12201A;--cd:#182A22;--bd:#264032;--bh:#3A6650;--tx:#E4EDE7;--sb:#88A893;--dm:#567562;--gn:#34D375;--gd:#1B5E3A;--gb:rgba(52,211,117,0.07);--am:#F5A623;--sk:#3BB5E8;--rd:#EF6B6B;--vi:#A48BFA}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;-webkit-tap-highlight-color:transparent}
+input,select,textarea,button{font-family:inherit}
+.hdr{background:var(--pn);border-bottom:1px solid var(--bd);padding:14px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100}
+.hdr img{height:28px}.hdr .sep{width:1px;height:22px;background:var(--bd)}
+.hdr .t1{font-size:14px;font-weight:700;color:var(--gn);letter-spacing:2.5px}
+.hdr .t2{font-size:9px;color:var(--dm);letter-spacing:0.8px}
+.tabs{display:flex;gap:4px;padding:8px 16px;background:var(--bg);border-bottom:1px solid var(--bd);position:sticky;top:56px;z-index:99;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tab{padding:7px 12px;border-radius:8px;border:1px solid transparent;background:transparent;color:var(--sb);font-size:12px;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.tab.on{background:var(--gb);border-color:rgba(52,211,117,0.2);color:var(--gn);font-weight:700}
+.ct{padding:16px;max-width:960px;margin:0 auto}
+.sec{background:var(--pn);border:1px solid var(--bd);border-radius:14px;padding:18px;margin-bottom:14px}
+.st{font-size:13px;font-weight:700;color:var(--gn);margin-bottom:14px}
+.gr{display:grid;gap:12px}.g3{grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}.gi{grid-template-columns:2fr 1fr auto;align-items:end}
+.fd label{display:block;font-size:10px;font-weight:700;color:var(--sb);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:5px}
+.fd select,.fd input,.fd textarea{width:100%;padding:10px 12px;background:var(--cd);border:1px solid var(--bd);border-radius:9px;color:var(--tx);font-size:13px;outline:none}
+.fd select{cursor:pointer}.fd textarea{resize:vertical;min-height:70px}
+.fd .un{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--dm)}
+.fd .rl{position:relative}
+.ba{display:inline-block;padding:3px 8px;border-radius:5px;font-size:10px;font-weight:600;white-space:nowrap}
+.bg{background:rgba(52,211,117,0.08);color:var(--gn);border:1px solid rgba(52,211,117,0.2)}
+.bs{background:rgba(59,181,232,0.08);color:var(--sk);border:1px solid rgba(59,181,232,0.2)}
+.bv{background:rgba(164,139,250,0.08);color:var(--vi);border:1px solid rgba(164,139,250,0.2)}
+.br{background:rgba(239,107,107,0.08);color:var(--rd);border:1px solid rgba(239,107,107,0.2)}
+.bam{background:rgba(245,166,35,0.08);color:var(--am);border:1px solid rgba(245,166,35,0.2)}
+.sc{background:var(--pn);border:1px solid var(--bd);border-radius:12px;padding:14px 16px;flex:1 1 120px;min-width:120px}
+.sc .lb{font-size:10px;color:var(--sb);font-weight:600;text-transform:uppercase;margin-bottom:5px}
+.sc .vl{font-size:22px;font-weight:800}
+.sc .u2{font-size:12px;color:var(--sb);margin-left:3px}
+.rw{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.en{background:var(--pn);border:1px solid var(--bd);border-radius:12px;margin-bottom:8px;overflow:hidden}
+.eh{display:flex;align-items:center;gap:8px;padding:12px 16px;cursor:pointer;flex-wrap:wrap;font-size:12px}
+.ed{padding:0 16px 14px;border-top:1px solid var(--bd);padding-top:14px}
+.dg{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:10px}
+.dl{font-size:9px;color:var(--dm);text-transform:uppercase;font-weight:600;margin-bottom:2px}
+.dv{font-size:12px}
+.ir{display:flex;justify-content:space-between;padding:4px 10px;background:var(--cd);border-radius:5px;font-size:12px;margin-bottom:3px}
+.btn{padding:10px 16px;border-radius:9px;cursor:pointer;font-size:13px;font-weight:700;border:none}
+.btn-p{background:var(--gd);color:var(--gn);border:1px solid rgba(52,211,117,0.25)}
+.btn-s{width:100%;padding:14px;background:var(--gd);color:var(--gn);border:1px solid rgba(52,211,117,0.25);border-radius:11px;font-size:14px;font-weight:700;margin-top:4px}
+.btn-s:disabled{background:var(--bd);color:var(--dm);cursor:not-allowed;border-color:var(--bd)}
+.btn-s.ok{background:var(--gn);color:var(--bg);border:none}
+.btn-d{padding:5px 12px;background:none;border:1px solid rgba(239,107,107,0.25);border-radius:7px;color:var(--rd);font-size:11px;cursor:pointer;font-weight:600}
+.btn-e{padding:8px 14px;background:var(--cd);border:1px solid var(--bd);border-radius:9px;color:var(--sb);font-size:11px;cursor:pointer;font-weight:600}
+.emp{text-align:center;padding:60px 20px;color:var(--sb)}
+.ld{position:fixed;top:0;left:0;right:0;padding:6px;background:var(--am);color:var(--bg);text-align:center;font-size:12px;font-weight:600;z-index:200}
+@media(max-width:500px){.gi{grid-template-columns:1fr}.sc .vl{font-size:18px}}
+</style>
+</head>
+<body>
+<div class="hdr">
+<img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAgAGMDASIAAhEBAxEB/8QAGgAAAwEBAQEAAAAAAAAAAAAAAAUGBAcDAv/EADMQAAEDAwIEBAQEBwAAAAAAAAECAwQABREGIRITMUEHFFFhInGBwSOhscIWMlJTcoKR/8QAGAEAAwEBAAAAAAAAAAAAAAAAAAECBAP/xAAeEQADAQADAAMBAAAAAAAAAAAAAQIRAxIxEyFRQf/aAAwDAQACEQMRAD8A6dRRUleNe2+13N6D5Z99TJwpbZTji7jc9qqZdPEJtL0raKzQJrU+3MTmc8p5sODPUAjpUkx4ixZL3JjWqc85gkJRwkkDcnGfSmoqvEDpItqKm7FrS1XqSmK3zY8hX8qHgBxewI2z7Vkn69iQ7s9bhAlPOtu8ocBT8Sum2/rR8d7mC7L0r6KkYuv7Yud5SdGlQXOLhJeSMJPvg5FMNS6ojadEbnsOvGRxcPLI2xj1+dHx1uYHZej6ipt7V8VnTLN8XFf5TznLS3kcXUjPp2NbdN35rUEJyUxHdZQhzl4cIyTgHt86TiktaH2R6Xu8t2lgKLa3VnskZ4B/Ur2pZC1SlE9qHdCw3zgksvBfDzCroODdQ+ZxSu9JMjVTjbTxizUlIaWo5Q4nA29j123BqZmPBT8mbDSm2x1uKCpbqSp95fcNpOSN+w6dz2quKO7emeeSqt/iOwUV4Qiswo5cKystp4ioYOcb5HrRXM0izVl7TY7I7ISR5hf4bCT3We/yHWuXTdPPsaVYvz7ilOSXt0nsg5wo+5P61Zaw0xfNQXQONOxURGU8LKFOHO/UnbqfsKcy7I/M0ULO7ykyUx0IBBPCFpxg5x02rTFrjSx++nKk6bEeibrnQ09tSvjgIcx/iUlQ/PNTvhslI1KX3FJQhiMtalKOAnoMk/WnNo0ZfbfDuccuxCmbGLQw4rZWRgn4fTi/7TDRmkJdmlS3Ll5Z1DzQbSlJKu+TkEewqqqEqx+iSbwlrVEVeNfqkWtB8oiZzy4kYSlAVnP17D3rHb3EyteofcICDOU6onoEhRV+grsoZSywpEZtDex4QkYGfpUFpjRNztmoGJ85yKtpsLJCFkkkpI7j3onmTT38Bw1gjvoTrDWam7NwKSpCUcxR4QoJ6q337/PatXiaeVPtsMKKgxF6nvvj9tb7hoO4wrumfp2Q0lKXOY2hxRSWz6Z7j7V66p0je7/ckTUmG0fLoQUFw7KGc426ZNUrntP39ITl4/oVamzH8P8AT0bpzPxCP9Sf3VVeGzXL0m2r+684v88fasmqdJ3G6w7VGhOR0ohMcCuYsjJwkbYHtWOHpzWkOAmBGusVmMNgEK3SCcnB4c9zUNzXHm/0paq3CsvNgiXdTbjqltPN9HEdcehrB/CDEi/G63OSuUUqyyxw8KGwDsD6+vudzVG2gNtpQCSEgDJO9fVZlTnwrpO7gUUUUiz/2Q==" alt="APRIL">
+<div class="sep"></div>
+<div><div class="t1">NURSERY</div><div class="t2">MANAGEMENT SYSTEM</div></div>
+</div>
+<div class="tabs" id="tabs"></div>
+<div id="loader" style="display:none" class="ld">Loading data...</div>
+<div class="ct" id="ct"></div>
+
+<script>
+const API='https://script.google.com/macros/s/AKfycbxExzGUv6Gm37KCYuzsc8CBDqWpp4GxHyvm6mZfAjIOIF6FdB9ALgv-FN7z3jT-pwgPUg/exec';
+
+// ── Cloud ──
+async function cloudGet(tab){
+  try{const r=await fetch(API+'?tab='+encodeURIComponent(tab));const j=await r.json();return j.status==='ok'?j.records:[];}catch(e){console.error(e);return[];}
+}
+async function cloudPost(data){
+  try{await fetch(API,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});}catch(e){console.error(e);}
+}
+
+// ── Data ──
+const NURSERIES=["KCN1E","KCN1W","KCN2","PCN","BCN"];
+const SECTORS=[];for(let i=1;i<=25;i++)SECTORS.push("Rooting House "+i);
+const BENCHES=["A1","A2","A3","B1","B2","B3","C1","C2","C3"];
+const SPECIES=[
+  {id:"ACRA_CUTT",label:"ACRA CUTT",desc:"Acacia - Cuttings"},
+  {id:"ACRA_TC",label:"ACRA TC",desc:"Acacia - Tissue Culture"},
+  {id:"ACRA_SEEDS",label:"ACRA SEEDS",desc:"Acacia - Seeds"},
+  {id:"ACRA_APICAL",label:"ACRA APICAL",desc:"Acacia - Apical Rescue"},
+  {id:"EUCA_CUTT",label:"EUCA CUTT",desc:"Eucalyptus - Cuttings"},
+  {id:"EUCA_TC",label:"EUCA TC",desc:"Eucalyptus - Tissue Culture"},
+];
+const CLONES={
+  ACRA_CUTT:["FAC083","FAC084","FAC094","FAC114","FAC115","FAC146","FAC147","FAC148","FAC151"],
+  ACRA_TC:["TAC083","TAC084","TAC094","TAC114","TAC115","TAC146","TAC147","TAC148","TAC151"],
+  ACRA_SEEDS:["FAC083","FAC084","FAC094","FAC114","FAC115","FAC146","FAC147","FAC148","FAC151"],
+  ACRA_APICAL:["FAC083","FAC084","FAC094","FAC114","FAC115","FAC146","FAC147","FAC148","FAC151"],
+  EUCA_CUTT:["CEP006","CEP111","CEP092","CEP074","CGP105"],
+  EUCA_TC:["TEP006","TEP111","TEP092","TEP074","TGP105"],
+};
+function getClonesFor(speciesId){return CLONES[speciesId]||[];}
+function getWeekOfMonth(d){const date=new Date(d);const day=date.getDate();return Math.ceil(day/7);}
+function makeLotId(dateStr,clone){
+  const d=new Date(dateStr);
+  const yy=String(d.getFullYear()).slice(-2);
+  const mm=String(d.getMonth()+1).padStart(2,'0');
+  const wk=getWeekOfMonth(d);
+  return yy+mm+'W'+wk+clone;
+}
+const STAFF=["Carlos Silva","Maria Oliveira","Jose Santos","Ana Costa","Pedro Lima","Fernanda Souza"];
+const INPUTS_LIST=[
+  {name:"NPK 10-10-10",unit:"g/L"},{name:"NPK 04-14-08",unit:"g/L"},
+  {name:"Osmocote 15-09-12",unit:"g/L"},{name:"Fungicide (Mancozeb)",unit:"mL/L"},
+  {name:"Insecticide (Imidacloprid)",unit:"mL/L"},{name:"Growth Regulator (IBA)",unit:"mg/L"},
+  {name:"Substrate",unit:"L"},{name:"Vermiculite",unit:"L"},
+  {name:"Carbonized Rice Husk",unit:"L"},{name:"Water",unit:"L"},
+];
+const REASONS=["Mortality (dead)","Contamination","PSQA","Mechanical damage"];
+
+let lots=[],envRecs=[],discards=[],deliveries=[];
+let view='dashboard';
+let pForm={},eForm={},dForm={},delForm={};
+let eInputs=[];
+let expId=null,filterS='';
+
+function spLbl(id){const s=SPECIES.find(e=>e.id===id);return s?s.label:(id||'');}
+function fD(iso){if(!iso)return'';const d=new Date(iso);return d.toLocaleDateString('en-GB',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'});}
+function fS(iso){if(!iso)return'';return new Date(iso).toLocaleDateString('en-GB',{day:'2-digit',month:'2-digit'});}
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function opts(arr,ph){let h='<option value="">'+(ph||'Select...')+'</option>';arr.forEach(o=>{const v=typeof o==='string'?o:o.value;const l=typeof o==='string'?o:o.label;h+='<option value="'+esc(v)+'">'+esc(l)+'</option>';});return h;}
+
+// ── Stock calc ──
+function getStock(){
+  const stock={};
+  lots.forEach(l=>{
+    const id=l.LotID||l.lotId||'';
+    if(!id)return;
+    stock[id]={lotId:id,nursery:l.Nursery||'',species:l.Species||'',clone:l.Clone||'',date:l.ProductionDate||'',produced:parseInt(l.Quantity)||0,discarded:0,delivered:0};
+  });
+  discards.forEach(d=>{
+    const id=d.LotID||'';
+    if(stock[id])stock[id].discarded+=(parseInt(d.Quantity)||0);
+  });
+  deliveries.forEach(d=>{
+    const id=d.LotID||'';
+    if(stock[id])stock[id].delivered+=(parseInt(d.Quantity)||0);
+  });
+  Object.values(stock).forEach(s=>{
+    s.current=s.produced-s.discarded-s.delivered;
+    s.recovery=s.produced>0?((s.delivered/s.produced)*100).toFixed(1):'0.0';
+  });
+  return Object.values(stock);
+}
+
+// ── Tabs ──
+function renderTabs(){
+  const ts=[{id:'dashboard',l:'Dashboard'},{id:'production',l:'Production'},{id:'environment',l:'Environment'},{id:'discards',l:'Discards'},{id:'delivery',l:'Delivery'},{id:'stock',l:'Stock'}];
+  document.getElementById('tabs').innerHTML=ts.map(t=>'<button class="tab'+(view===t.id?' on':'')+'" onclick="sw(\''+t.id+'\')">'+t.l+'</button>').join('');
+}
+function sw(v){view=v;if(v==='production')pForm={nursery:'',species:'',clone:'',date:'',qty:'',sector:'',bench:'',employee:'',notes:''};if(v==='environment'){eForm={nursery:'',employee:'',sector:'',bench:'',species:'',gm:'',temp:'',hum:'',light:'',shade:'',notes:''};eInputs=[];}if(v==='discards')dForm={lot:'',nursery:'',qty:'',reason:'',employee:'',notes:''};if(v==='delivery')delForm={lot:'',nursery:'',qty:'',client:'',employee:'',notes:''};expId=null;filterS='';renderTabs();render();}
+
+// ── Dashboard ──
+function rDash(){
+  const st=getStock();
+  const totalProd=st.reduce((s,x)=>s+x.produced,0);
+  const totalDisc=st.reduce((s,x)=>s+x.discarded,0);
+  const totalDel=st.reduce((s,x)=>s+x.delivered,0);
+  const totalStock=st.reduce((s,x)=>s+x.current,0);
+  const mortRate=totalProd?((totalDisc/totalProd)*100).toFixed(1):'0';
+  const recoveryRate=totalProd?((totalDel/totalProd)*100).toFixed(1):'0';
+  let h='<div class="rw">';
+  h+=sc('Total Lots',lots.length,'','var(--vi)');
+  h+=sc('Produced',totalProd,'tubes','var(--gn)');
+  h+=sc('Discarded',totalDisc,'tubes','var(--rd)');
+  h+=sc('Delivered',totalDel,'tubes','var(--sk)');
+  h+='</div><div class="rw">';
+  h+=sc('Live Stock',totalStock,'tubes','var(--gn)');
+  h+=sc('Mortality',mortRate,'%','var(--rd)');
+  h+=sc('Recovery',recoveryRate,'%','var(--am)');
+  h+=sc('Env. Records',envRecs.length,'','var(--vi)');
+  h+='</div>';
+  // Charts
+  h+='<div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px">';
+  h+='<div class="sec" style="flex:1 1 300px;margin-bottom:0"><div class="st">Stock by Species</div><canvas id="ch1" height="180"></canvas></div>';
+  h+='<div class="sec" style="flex:1 1 300px;margin-bottom:0"><div class="st">Discards by Reason</div><canvas id="ch2" height="180"></canvas></div>';
+  h+='</div>';
+  // Recent lots
+  h+='<div class="sec"><div class="st">Recent Lots</div>';
+  if(!lots.length)h+='<div style="color:var(--dm);font-size:13px">No lots created yet</div>';
+  lots.slice(-5).reverse().forEach(l=>{
+    h+='<div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--cd);border-radius:8px;font-size:12px;flex-wrap:wrap;margin-bottom:5px">';
+    h+='<span class="ba bg">'+esc(l.LotID||'')+'</span>';
+    h+='<span class="ba bv">'+esc(l.Species||'')+'</span>';
+    h+='<span>'+esc(l.Clone||'')+'</span>';
+    h+='<span style="color:var(--gn);font-weight:600">'+esc(l.Quantity||'')+' tubes</span>';
+    h+='</div>';
+  });
+  h+='</div>';
+  return h;
+}
+function sc(l,v,u,c){return'<div class="sc"><div class="lb">'+l+'</div><span class="vl" style="color:'+c+'">'+v+'</span>'+(u?'<span class="u2">'+u+'</span>':'')+'</div>';}
+
+function buildDashCharts(){
+  // Stock by species
+  const specMap={};getStock().forEach(s=>{specMap[s.species]=(specMap[s.species]||0)+s.current;});
+  const c1=document.getElementById('ch1');
+  if(c1&&Object.keys(specMap).length){new Chart(c1,{type:'bar',data:{labels:Object.keys(specMap),datasets:[{data:Object.values(specMap),backgroundColor:'rgba(52,211,117,0.6)',borderColor:'#34D375',borderWidth:1,borderRadius:6}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#567562',font:{size:10}},grid:{color:'#264032'}},y:{ticks:{color:'#567562',font:{size:10}},grid:{color:'#264032'}}}}});}
+  // Discards by reason
+  const resMap={};discards.forEach(d=>{const r=d.Reason||'Unknown';resMap[r]=(resMap[r]||0)+(parseInt(d.Quantity)||0);});
+  const c2=document.getElementById('ch2');
+  const colors=['#EF6B6B','#F5A623','#3BB5E8','#A48BFA','#34D375'];
+  if(c2&&Object.keys(resMap).length){new Chart(c2,{type:'doughnut',data:{labels:Object.keys(resMap),datasets:[{data:Object.values(resMap),backgroundColor:colors.slice(0,Object.keys(resMap).length),borderWidth:0}]},options:{responsive:true,plugins:{legend:{labels:{color:'#88A893',font:{size:11}}}}}});}
+}
+
+// ── Production Form ──
+function rProd(){
+  const cloneList=getClonesFor(pForm.species);
+  const isSeed=pForm.species==='ACRA_SEEDS';
+  const autoLotId=(pForm.date&&pForm.clone)?makeLotId(pForm.date,pForm.clone):'';
+  let h='<div class="sec"><div class="st">New Production Lot</div><div class="gr g3">';
+  h+=fd('Nursery','p_nursery',NURSERIES,pForm.nursery);
+  h+=fd('Species','p_species',SPECIES.map(s=>({value:s.id,label:s.label+' - '+s.desc})),pForm.species,'Select species...');
+  if(isSeed){
+    h+='<div class="fd"><label>Genetic Material</label><input value="'+esc(pForm.clone||'')+'" placeholder="Type seed lot code..." onchange="pForm.clone=this.value;render()"></div>';
+  }else{
+    h+=fd('Genetic Material','p_clone',cloneList,pForm.clone,pForm.species?'Select clone...':'Select species first');
+  }
+  h+='<div class="fd"><label>Production Date</label><input type="date" value="'+esc(pForm.date||'')+'" onchange="pForm.date=this.value;render()"></div>';
+  h+='<div class="fd"><label>Quantity (tubes)</label><input type="number" value="'+esc(pForm.qty||'')+'" placeholder="e.g. 5000" onchange="pForm.qty=this.value"></div>';
+  h+=fd('Sector','p_sector',SECTORS,pForm.sector);
+  h+=fd('Bench','p_bench',BENCHES,pForm.bench);
+  h+=fd('Employee','p_employee',STAFF,pForm.employee);
+  h+='</div>';
+  if(autoLotId){
+    h+='<div style="margin-top:12px;padding:10px 14px;background:var(--gb);border-radius:8px;font-size:13px;color:var(--gn);font-weight:600">Lot ID: '+esc(autoLotId)+'</div>';
+  }
+  h+='<div class="fd" style="margin-top:12px"><label>Notes</label><textarea placeholder="Optional notes..." onchange="pForm.notes=this.value">'+esc(pForm.notes||'')+'</textarea></div>';
+  const dis=!pForm.species||!pForm.clone||!pForm.qty||!pForm.date;
+  h+='<button class="btn-s" id="pBtn" '+(dis?'disabled':'')+' onclick="saveProd()">Create Lot</button>';
+  h+='</div>';
+  // Existing lots
+  h+='<div class="sec"><div class="st">Production History ('+lots.length+')</div>';
+  lots.slice().reverse().forEach(l=>{
+    h+='<div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--cd);border-radius:8px;font-size:12px;flex-wrap:wrap;margin-bottom:5px">';
+    h+='<span style="color:var(--dm);font-size:10px">'+esc(l.ProductionDate||'')+'</span>';
+    h+='<span class="ba bg">'+esc(l.LotID||'')+'</span>';
+    if(l.Nursery)h+='<span class="ba bs">'+esc(l.Nursery)+'</span>';
+    h+='<span>'+esc(l.Clone||'')+'</span>';
+    h+='<span style="color:var(--gn);font-weight:600">'+esc(l.Quantity||'')+' tubes</span>';
+    h+='</div>';
+  });
+  h+='</div>';
+  return h;
+}
+async function saveProd(){
+  const lotId=makeLotId(pForm.date,pForm.clone);
+  const rec={_tab:'Production',LotID:lotId,Nursery:pForm.nursery,Species:spLbl(pForm.species),Clone:pForm.clone,ProductionDate:pForm.date,Quantity:pForm.qty,Sector:pForm.sector,Bench:pForm.bench,Employee:pForm.employee,Notes:pForm.notes,Timestamp:new Date().toISOString()};
+  lots.push(rec);cloudPost(rec);
+  const b=document.getElementById('pBtn');b.className='btn-s ok';b.textContent='\u2713 Lot Created! ('+lotId+')';
+  setTimeout(()=>{pForm={nursery:'',species:'',clone:'',date:'',qty:'',sector:'',bench:'',employee:'',notes:''};render();},2000);
+}
+
+// ── Environment Form ──
+function rEnv(){
+  let h='<div class="sec"><div class="st">Environmental Log</div><div class="gr g3">';
+  h+=fd('Nursery','e_nursery',NURSERIES,eForm.nursery);
+  h+=fd('Employee','e_employee',STAFF,eForm.employee);
+  h+=fd('Sector','e_sector',SECTORS,eForm.sector);
+  h+=fd('Bench','e_bench',BENCHES,eForm.bench);
+  h+=fd('Species','e_species',SPECIES.map(s=>({value:s.id,label:s.label+' - '+s.desc})),eForm.species,'Select...');
+  h+='<div class="fd"><label>Clone / Lot</label><input value="'+esc(eForm.gm||'')+'" placeholder="e.g. GG100" onchange="eForm.gm=this.value"></div>';
+  h+='</div></div>';
+  h+='<div class="sec"><div class="st">Variables</div><div class="gr g3">';
+  h+=fi('Temperature','e_temp','number','e.g. 28.5','\u00B0C','0.1',eForm.temp);
+  h+=fi('Humidity','e_hum','number','e.g. 75','%','0.1',eForm.hum);
+  h+=fi('Light','e_light','number','e.g. 15000','lux','1',eForm.light);
+  h+=fd('Shade-net','e_shade',['Extended','Retracted'],eForm.shade);
+  h+='</div></div>';
+  // Inputs
+  h+='<div class="sec"><div class="st">Inputs Used</div><div class="gr gi">';
+  h+='<div class="fd"><label>Input</label><select id="eiN">'+opts(INPUTS_LIST.map(i=>({value:i.name,label:i.name+' ('+i.unit+')'})))+'</select></div>';
+  h+='<div class="fd"><label>Qty</label><input id="eiQ" type="number" step="0.1" placeholder="0"></div>';
+  h+='<button class="btn btn-p" style="height:40px" onclick="addEI()">+</button></div>';
+  if(eInputs.length){h+='<div style="margin-top:10px">';eInputs.forEach((x,i)=>{h+='<div class="ir"><span>'+esc(x.name)+'</span><span><span style="color:var(--gn);font-weight:600">'+esc(x.qty)+' '+esc(x.unit)+'</span> <button onclick="eInputs.splice('+i+',1);render()" style="background:none;border:none;color:var(--rd);cursor:pointer;font-weight:700">x</button></span></div>';});h+='</div>';}
+  h+='</div>';
+  h+='<div class="sec"><div class="st">Notes</div><div class="fd"><textarea placeholder="Observations..." onchange="eForm.notes=this.value">'+esc(eForm.notes||'')+'</textarea></div></div>';
+  const dis=!eForm.employee||!eForm.sector;
+  h+='<button class="btn-s" id="eBtn" '+(dis?'disabled':'')+' onclick="saveEnv()">Save Record</button>';
+  return h;
+}
+function addEI(){const n=document.getElementById('eiN'),q=document.getElementById('eiQ');if(!n.value||!q.value)return;const info=INPUTS_LIST.find(i=>i.name===n.value);eInputs.push({name:n.value,qty:q.value,unit:info?info.unit:''});n.value='';q.value='';render();}
+async function saveEnv(){
+  const inp=eInputs.map(i=>i.name+':'+i.qty+i.unit).join('; ');
+  const rec={_tab:'Environmental',Timestamp:new Date().toISOString(),Nursery:eForm.nursery,Employee:eForm.employee,Sector:eForm.sector,Bench:eForm.bench,Species:spLbl(eForm.species),Clone:eForm.gm,Temperature:eForm.temp,Humidity:eForm.hum,Light:eForm.light,ShadeNet:eForm.shade,Inputs:inp,Notes:eForm.notes};
+  envRecs.push(rec);cloudPost(rec);
+  const b=document.getElementById('eBtn');b.className='btn-s ok';b.textContent='\u2713 Saved!';
+  setTimeout(()=>{eForm={nursery:'',employee:'',sector:'',bench:'',species:'',gm:'',temp:'',hum:'',light:'',shade:'',notes:''};eInputs=[];render();},1500);
+}
+
+// ── Discards Form ──
+function rDisc(){
+  const lotOpts=lots.map(l=>({value:l.LotID||'',label:(l.LotID||'')+' ('+l.Quantity+' tubes)'}));
+  let h='<div class="sec"><div class="st">Register Discard</div><div class="gr g3">';
+  h+=fd('Lot','d_lot',lotOpts,dForm.lot,'Select lot...');
+  h+=fd('Nursery','d_nursery',NURSERIES,dForm.nursery);
+  h+='<div class="fd"><label>Quantity Discarded</label><input type="number" value="'+esc(dForm.qty||'')+'" placeholder="e.g. 200" onchange="dForm.qty=this.value"></div>';
+  h+=fd('Reason','d_reason',REASONS,dForm.reason);
+  h+=fd('Employee','d_employee',STAFF,dForm.employee);
+  h+='</div>';
+  h+='<div class="fd" style="margin-top:12px"><label>Notes</label><textarea placeholder="Optional..." onchange="dForm.notes=this.value">'+esc(dForm.notes||'')+'</textarea></div>';
+  const dis=!dForm.lot||!dForm.qty||!dForm.reason;
+  h+='<button class="btn-s" id="dBtn" '+(dis?'disabled':'')+' onclick="saveDisc()">Register Discard</button>';
+  h+='</div>';
+  // History
+  h+='<div class="sec"><div class="st">Discard History ('+discards.length+')</div>';
+  discards.slice().reverse().forEach(d=>{
+    h+='<div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--cd);border-radius:8px;font-size:12px;flex-wrap:wrap;margin-bottom:5px">';
+    h+='<span style="color:var(--dm);font-size:10px">'+fD(d.Timestamp||'')+'</span>';
+    h+='<span class="ba bg">'+esc(d.LotID||'')+'</span>';
+    h+='<span class="ba br">'+esc(d.Reason||'')+'</span>';
+    h+='<span style="color:var(--rd);font-weight:600">-'+esc(d.Quantity||'')+' tubes</span>';
+    h+='</div>';
+  });
+  h+='</div>';
+  return h;
+}
+async function saveDisc(){
+  const rec={_tab:'Discards',Timestamp:new Date().toISOString(),LotID:dForm.lot,Nursery:dForm.nursery,Quantity:dForm.qty,Reason:dForm.reason,Employee:dForm.employee,Notes:dForm.notes};
+  discards.push(rec);cloudPost(rec);
+  const b=document.getElementById('dBtn');b.className='btn-s ok';b.textContent='\u2713 Registered!';
+  setTimeout(()=>{dForm={lot:'',nursery:'',qty:'',reason:'',employee:'',notes:''};render();},1500);
+}
+
+// ── Delivery Form ──
+function rDel(){
+  const lotOpts=lots.map(l=>({value:l.LotID||'',label:(l.LotID||'')+' ('+l.Quantity+' tubes)'}));
+  let h='<div class="sec"><div class="st">Register Delivery</div><div class="gr g3">';
+  h+=fd('Lot','del_lot',lotOpts,delForm.lot,'Select lot...');
+  h+=fd('Nursery','del_nursery',NURSERIES,delForm.nursery);
+  h+='<div class="fd"><label>Quantity Delivered</label><input type="number" value="'+esc(delForm.qty||'')+'" placeholder="e.g. 3000" onchange="delForm.qty=this.value"></div>';
+  h+='<div class="fd"><label>Client / Destination</label><input value="'+esc(delForm.client||'')+'" placeholder="e.g. Estate Block A" onchange="delForm.client=this.value"></div>';
+  h+=fd('Employee','del_employee',STAFF,delForm.employee);
+  h+='</div>';
+  h+='<div class="fd" style="margin-top:12px"><label>Notes</label><textarea placeholder="Optional..." onchange="delForm.notes=this.value">'+esc(delForm.notes||'')+'</textarea></div>';
+  const dis=!delForm.lot||!delForm.qty;
+  h+='<button class="btn-s" id="delBtn" '+(dis?'disabled':'')+' onclick="saveDel()">Register Delivery</button>';
+  h+='</div>';
+  // History
+  h+='<div class="sec"><div class="st">Delivery History ('+deliveries.length+')</div>';
+  if(!deliveries.length)h+='<div style="color:var(--dm);font-size:13px">No deliveries yet</div>';
+  deliveries.slice().reverse().forEach(d=>{
+    h+='<div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--cd);border-radius:8px;font-size:12px;flex-wrap:wrap;margin-bottom:5px">';
+    h+='<span style="color:var(--dm);font-size:10px">'+fD(d.Timestamp||'')+'</span>';
+    h+='<span class="ba bg">'+esc(d.LotID||'')+'</span>';
+    if(d.Client)h+='<span class="ba bam">'+esc(d.Client)+'</span>';
+    h+='<span style="color:var(--sk);font-weight:600">'+esc(d.Quantity||'')+' tubes</span>';
+    h+='</div>';
+  });
+  h+='</div>';
+  return h;
+}
+async function saveDel(){
+  const rec={_tab:'Deliveries',Timestamp:new Date().toISOString(),LotID:delForm.lot,Nursery:delForm.nursery,Quantity:delForm.qty,Client:delForm.client,Employee:delForm.employee,Notes:delForm.notes};
+  deliveries.push(rec);cloudPost(rec);
+  const b=document.getElementById('delBtn');b.className='btn-s ok';b.textContent='\u2713 Delivery Registered!';
+  setTimeout(()=>{delForm={lot:'',nursery:'',qty:'',client:'',employee:'',notes:''};render();},1500);
+}
+
+// ── Stock View ──
+function rStock(){
+  const st=getStock();
+  if(!st.length)return'<div class="emp"><div style="font-size:48px;opacity:0.25;margin-bottom:16px">📦</div><div style="font-size:16px;font-weight:600">No stock data</div><div style="font-size:13px;margin-top:8px;color:var(--dm)">Create production lots first</div></div>';
+  let h='<div class="sec"><div class="st">Stock Summary by Lot</div>';
+  h+='<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:11px">';
+  h+='<tr style="border-bottom:1px solid var(--bd);text-align:left">';
+  ['Lot ID','Species','Clone','Produced','Discarded','Delivered','Stock','Recovery'].forEach(c=>{h+='<th style="padding:7px 8px;color:var(--sb);font-size:9px;text-transform:uppercase;font-weight:700">'+c+'</th>';});
+  h+='</tr>';
+  st.forEach(s=>{
+    const stockColor=s.current<=0?'var(--rd)':s.current<s.produced*0.3?'var(--am)':'var(--gn)';
+    const recColor=parseFloat(s.recovery)>=70?'var(--gn)':parseFloat(s.recovery)>=40?'var(--am)':'var(--rd)';
+    h+='<tr style="border-bottom:1px solid var(--bd)">';
+    h+='<td style="padding:7px 8px"><span class="ba bg" style="font-size:9px">'+esc(s.lotId)+'</span></td>';
+    h+='<td style="padding:7px 8px">'+esc(s.species)+'</td>';
+    h+='<td style="padding:7px 8px">'+esc(s.clone)+'</td>';
+    h+='<td style="padding:7px 8px;color:var(--gn)">'+s.produced+'</td>';
+    h+='<td style="padding:7px 8px;color:var(--rd)">'+s.discarded+'</td>';
+    h+='<td style="padding:7px 8px;color:var(--sk)">'+s.delivered+'</td>';
+    h+='<td style="padding:7px 8px;font-weight:700;color:'+stockColor+'">'+s.current+'</td>';
+    h+='<td style="padding:7px 8px;font-weight:700;color:'+recColor+'">'+s.recovery+'%</td>';
+    h+='</tr>';
+  });
+  h+='</table></div></div>';
+  h+='<div style="text-align:center;margin-top:8px"><button class="btn-e" onclick="exportStock()">Export CSV</button></div>';
+  return h;
+}
+function exportStock(){
+  const st=getStock();if(!st.length)return;
+  let csv='\uFEFF'+'LotID,Species,Clone,Produced,Discarded,Delivered,Stock,Recovery%\n';
+  st.forEach(s=>{csv+='"'+s.lotId+'","'+s.species+'","'+s.clone+'",'+s.produced+','+s.discarded+','+s.delivered+','+s.current+','+s.recovery+'\n';});
+  try{const b=new Blob([csv],{type:'text/csv;charset=utf-8'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download='stock-'+new Date().toISOString().slice(0,10)+'.csv';document.body.appendChild(a);a.click();document.body.removeChild(a);}catch(e){window.open('data:text/csv;charset=utf-8,'+encodeURIComponent(csv),'_blank');}
+}
+
+// ── Shared ──
+function fd(label,id,options,val,ph){
+  let h='<div class="fd"><label>'+label+'</label><select onchange="setFd(\''+id+'\',this.value)">'+opts(options,ph)+'</select></div>';
+  setTimeout(()=>{const els=document.querySelectorAll('select');els.forEach(el=>{if(el.getAttribute('onchange')&&el.getAttribute('onchange').includes("'"+id+"'"))el.value=val||'';});},10);
+  return h;
+}
+function fi(label,id,type,ph,unit,step,val){
+  return'<div class="fd"><label>'+label+'</label><div class="rl"><input type="'+type+'" value="'+esc(val||'')+'" placeholder="'+ph+'" step="'+(step||'')+'" '+(unit?'style="padding-right:46px"':'')+' onchange="setFd(\''+id+'\',this.value)"><'+(unit?'span class="un">'+unit+'</span':'')+'></div></div>';
+}
+function setFd(id,v){
+  if(id.startsWith('p_')){
+    const key=id.slice(2);
+    pForm[key]=v;
+    if(key==='species')pForm.clone='';
+  }
+  else if(id.startsWith('e_'))eForm[id.slice(2)]=v;
+  else if(id.startsWith('d_'))dForm[id.slice(2)]=v;
+  else if(id.startsWith('del_'))delForm[id.slice(4)]=v;
+  render();
+}
+
+// ── Render ──
+function render(){
+  const el=document.getElementById('ct');
+  if(view==='dashboard'){el.innerHTML=rDash();if(lots.length)setTimeout(buildDashCharts,50);}
+  else if(view==='production')el.innerHTML=rProd();
+  else if(view==='environment')el.innerHTML=rEnv();
+  else if(view==='discards')el.innerHTML=rDisc();
+  else if(view==='delivery')el.innerHTML=rDel();
+  else if(view==='stock')el.innerHTML=rStock();
+}
+
+// ── Init ──
+async function init(){
+  document.getElementById('loader').style.display='block';
+  try{
+    const [p,e,d,del]=await Promise.all([cloudGet('Production'),cloudGet('Environmental'),cloudGet('Discards'),cloudGet('Deliveries')]);
+    lots=p||[];envRecs=e||[];discards=d||[];deliveries=del||[];
+  }catch(ex){console.error(ex);}
+  document.getElementById('loader').style.display='none';
+  renderTabs();render();
+}
+init();
+</script>
+</body>
+</html>
