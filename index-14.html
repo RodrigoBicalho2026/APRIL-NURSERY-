@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0B1810">
+<title>APRIL Nursery</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+:root{--bg:#0B1810;--pn:#12201A;--cd:#182A22;--bd:#264032;--bh:#3A6650;--tx:#E4EDE7;--sb:#88A893;--dm:#567562;--gn:#34D375;--gd:#1B5E3A;--gb:rgba(52,211,117,0.07);--am:#F5A623;--sk:#3BB5E8;--rd:#EF6B6B;--vi:#A48BFA}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;-webkit-tap-highlight-color:transparent}
+input,select,textarea,button{font-family:inherit}
+.hdr{background:var(--pn);border-bottom:1px solid var(--bd);padding:14px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100}
+.hdr img{height:28px}.hdr .sep{width:1px;height:22px;background:var(--bd)}
+.hdr .t1{font-size:14px;font-weight:700;color:var(--gn);letter-spacing:2.5px}
+.hdr .t2{font-size:9px;color:var(--dm);letter-spacing:0.8px}
+.hdr .usr{margin-left:auto;font-size:11px;color:var(--sb);text-align:right}
+.hdr .usr b{color:var(--gn);font-size:12px}
+.hdr .logout{background:none;border:1px solid var(--bd);border-radius:6px;color:var(--rd);font-size:10px;padding:4px 10px;cursor:pointer;margin-left:8px}
+.tabs{display:flex;gap:4px;padding:8px 16px;background:var(--bg);border-bottom:1px solid var(--bd);position:sticky;top:56px;z-index:99;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tab{padding:7px 12px;border-radius:8px;border:1px solid transparent;background:transparent;color:var(--sb);font-size:12px;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.tab.on{background:var(--gb);border-color:rgba(52,211,117,0.2);color:var(--gn);font-weight:700}
+.ct{padding:16px;max-width:960px;margin:0 auto}
+.sec{background:var(--pn);border:1px solid var(--bd);border-radius:14px;padding:18px;margin-bottom:14px}
+.st{font-size:13px;font-weight:700;color:var(--gn);margin-bottom:14px}
+.gr{display:grid;gap:12px}.g3{grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}.gi{grid-template-columns:2fr 1fr auto;align-items:end}
+.fd label{display:block;font-size:10px;font-weight:700;color:var(--sb);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:5px}
+.fd select,.fd input,.fd textarea{width:100%;padding:10px 12px;background:var(--cd);border:1px solid var(--bd);border-radius:9px;color:var(--tx);font-size:13px;outline:none}
+.fd select{cursor:pointer}.fd textarea{resize:vertical;min-height:70px}
+.fd .un{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--dm)}
+.fd .rl{position:relative}
+.ba{display:inline-block;padding:3px 8px;border-radius:5px;font-size:10px;font-weight:600;white-space:nowrap}
+.bg{background:rgba(52,211,117,0.08);color:var(--gn);border:1px solid rgba(52,211,117,0.2)}
+.bs{background:rgba(59,181,232,0.08);color:var(--sk);border:1px solid rgba(59,181,232,0.2)}
+.bv{background:rgba(164,139,250,0.08);color:var(--vi);border:1px solid rgba(164,139,250,0.2)}
+.br{background:rgba(239,107,107,0.08);color:var(--rd);border:1px solid rgba(239,107,107,0.2)}
+.bam{background:rgba(245,166,35,0.08);color:var(--am);border:1px solid rgba(245,166,35,0.2)}
+.sc{background:var(--pn);border:1px solid var(--bd);border-radius:12px;padding:14px 16px;flex:1 1 120px;min-width:120px}
+.sc .lb{font-size:10px;color:var(--sb);font-weight:600;text-transform:uppercase;margin-bottom:5px}
+.sc .vl{font-size:22px;font-weight:800}
+.sc .u2{font-size:12px;color:var(--sb);margin-left:3px}
+.rw{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.en{background:var(--pn);border:1px solid var(--bd);border-radius:12px;margin-bottom:8px;overflow:hidden}
+.ir{display:flex;justify-content:space-between;padding:4px 10px;background:var(--cd);border-radius:5px;font-size:12px;margin-bottom:3px}
+.btn{padding:10px 16px;border-radius:9px;cursor:pointer;font-size:13px;font-weight:700;border:none}
+.btn-p{background:var(--gd);color:var(--gn);border:1px solid rgba(52,211,117,0.25)}
+.btn-s{width:100%;padding:14px;background:var(--gd);color:var(--gn);border:1px solid rgba(52,211,117,0.25);border-radius:11px;font-size:14px;font-weight:700;margin-top:4px}
+.btn-s:disabled{background:var(--bd);color:var(--dm);cursor:not-allowed;border-color:var(--bd)}
+.btn-s.ok{background:var(--gn);color:var(--bg);border:none}
+.btn-d{padding:5px 12px;background:none;border:1px solid rgba(239,107,107,0.25);border-radius:7px;color:var(--rd);font-size:11px;cursor:pointer;font-weight:600}
+.btn-e{padding:8px 14px;background:var(--cd);border:1px solid var(--bd);border-radius:9px;color:var(--sb);font-size:11px;cursor:pointer;font-weight:600}
+.emp{text-align:center;padding:60px 20px;color:var(--sb)}
+.ld{position:fixed;top:0;left:0;right:0;padding:6px;background:var(--am);color:var(--bg);text-align:center;font-size:12px;font-weight:600;z-index:200}
+.login-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+.login-box{background:var(--pn);border:1px solid var(--bd);border-radius:16px;padding:32px 28px;width:100%;max-width:360px;text-align:center}
+.login-box img{height:36px;margin-bottom:8px}
+.login-box h2{font-size:16px;color:var(--gn);letter-spacing:2px;margin-bottom:4px}
+.login-box .sub{font-size:10px;color:var(--dm);margin-bottom:24px}
+.login-box .fd{margin-bottom:14px;text-align:left}
+.login-box .err{color:var(--rd);font-size:12px;margin-top:10px}
+@media(max-width:500px){.gi{grid-template-columns:1fr}.sc .vl{font-size:18px}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const LOGO_SRC='data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAgAGMDASIAAhEBAxEB/8QAGgAAAwEBAQEAAAAAAAAAAAAAAAUGBAcDAv/EADMQAAEDAwIEBAQEBwAAAAAAAAECAwQABREGIRITMUEHFFFhInGBwSOhscIWMlJTcoKR/8QAGAEAAwEBAAAAAAAAAAAAAAAAAAECBAP/xAAeEQADAQADAAMBAAAAAAAAAAAAAQIRAxIxEyFRQf/aAAwDAQACEQMRAD8A6dRRUleNe2+13N6D5Z99TJwpbZTji7jc9qqZdPEJtL0raKzQJrU+3MTmc8p5sODPUAjpUkx4ixZL3JjWqc85gkJRwkkDcnGfSmoqvEDpItqKm7FrS1XqSmK3zY8hX8qHgBxewI2z7Vkn69iQ7s9bhAlPOtu8ocBT8Sum2/rR8d7mC7L0r6KkYuv7Yud5SdGlQXOLhJeSMJPvg5FMNS6ojadEbnsOvGRxcPLI2xj1+dHx1uYHZej6ipt7V8VnTLN8XFf5TznLS3kcXUjPp2NbdN35rUEJyUxHdZQhzl4cIyTgHt86TiktaH2R6Xu8t2lgKLa3VnskZ4B/Ur2pZC1SlE9qHdCw3zgksvBfDzCroODdQ+ZxSu9JMjVTjbTxizUlIaWo5Q4nA29j123BqZmPBT8mbDSm2x1uKCpbqSp95fcNpOSN+w6dz2quKO7emeeSqt/iOwUV4Qiswo5cKystp4ioYOcb5HrRXM0izVl7TY7I7ISR5hf4bCT3We/yHWuXTdPPsaVYvz7ilOSXt0nsg5wo+5P61Zaw0xfNQXQONOxURGU8LKFOHO/UnbqfsKcy7I/M0ULO7ykyUx0IBBPCFpxg5x02rTFrjSx++nKk6bEeibrnQ09tSvjgIcx/iUlQ/PNTvhslI1KX3FJQhiMtalKOAnoMk/WnNo0ZfbfDuccuxCmbGLQw4rZWRgn4fTi/7TDRmkJdmlS3Ll5Z1DzQbSlJKu+TkEewqqqEqx+iSbwlrVEVeNfqkWtB8oiZzy4kYSlAVnP17D3rHb3EyteofcICDOU6onoEhRV+grsoZSywpEZtDex4QkYGfpUFpjRNztmoGJ85yKtpsLJCFkkkpI7j3onmTT38Bw1gjvoTrDWam7NwKSpCUcxR4QoJ6q337/PatXiaeVPtsMKKgxF6nvvj9tb7hoO4wrumfp2Q0lKXOY2hxRSWz6Z7j7V66p0je7/ckTUmG0fLoQUFw7KGc426ZNUrntP39ITl4/oVamzH8P8AT0bpzPxCP9Sf3VVeGzXL0m2r+684v88fasmqdJ3G6w7VGhOR0ohMcCuYsjJwkbYHtWOHpzWkOAmBGusVmMNgEK3SCcnB4c9zUNzXHm/0paq3CsvNgiXdTbjqltPN9HEdcehrB/CDEi/G63OSuUUqyyxw8KGwDsD6+vudzVG2gNtpQCSEgDJO9fVZlTnwrpO7gUUUUiz/2Q==';
+const API='https://script.google.com/macros/s/AKfycbx1Kl6t9SlG6I6Bwm6KBLrCoOV5q9KXUQVzu1myimG2PnkmoFo-OnV1ryAyG2oXFAZXVA/exec';
+
+// ── Session ──
+let currentUser=null;
+function saveSession(u){currentUser=u;try{localStorage.setItem('anUser',JSON.stringify(u));}catch(e){}}
+function loadSession(){try{const s=localStorage.getItem('anUser');if(s)currentUser=JSON.parse(s);}catch(e){}}
+function logout(){currentUser=null;try{localStorage.removeItem('anUser');}catch(e){}renderApp();}
+function isAdmin(){return currentUser&&String(currentUser.level)==='1';}
+function userNursery(){return currentUser?currentUser.nursery:'';}
+
+// ── Cloud ──
+async function cloudGet(tab){try{const r=await fetch(API+'?tab='+encodeURIComponent(tab));const j=await r.json();return j.status==='ok'?j.records:[];}catch(e){return[];}}
+async function cloudPost(data){try{await fetch(API,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});}catch(e){}}
+async function doLogin(wid,pwd){
+  const LOCAL_USERS=[
+    {WorkdayID:'20088744',Name:'Rodrigo',Password:'12345',Nursery:'KCN2',Level:'1',Active:'YES'}
+  ];
+  const found=LOCAL_USERS.find(u=>String(u.WorkdayID)===String(wid)&&String(u.Password)===String(pwd)&&u.Active==='YES');
+  if(found)return{status:'ok',user:{name:found.Name,wid:found.WorkdayID,nursery:found.Nursery,level:found.Level}};
+  return{status:'error',message:'Invalid credentials'};
+}
+async function deleteUser(wid){try{await fetch(API+'?action=deleteuser&wid='+encodeURIComponent(wid));}catch(e){}}
+
+// ── Data ──
+const NURSERIES=["KCN1E","KCN1W","KCN2","PCN","BCN"];
+const SECTORS=[];for(let i=1;i<=25;i++)SECTORS.push("Rooting House "+i);
+const BENCHES=["A1","A2","A3","B1","B2","B3","C1","C2","C3"];
+const SPECIES=[
+  {id:"ACRA_CUTT",label:"ACRA CUTT",desc:"Acacia - Cuttings"},
+  {id:"ACRA_TC",label:"ACRA TC",desc:"Acacia - Tissue Culture"},
+  {id:"ACRA_SEEDS",label:"ACRA SEEDS",desc:"Acacia - Seeds"},
+  {id:"ACRA_APICAL",label:"ACRA APICAL",desc:"Acacia - Apical Rescue"},
+  {id:"EUCA_CUTT",label:"EUCA CUTT",desc:"Eucalyptus - Cuttings"},
+  {id:"EUCA_TC",label:"EUCA TC",desc:"Eucalyptus - Tissue Culture"},
+];
+const CLONES={
+  ACRA_CUTT:["FAC083","FAC084","FAC094","FAC114","FAC115","FAC146","FAC147","FAC148","FAC151"],
+  ACRA_TC:["TAC083","TAC084","TAC094","TAC114","TAC115","TAC146","TAC147","TAC148","TAC151"],
+  ACRA_SEEDS:["FAC083","FAC084","FAC094","FAC114","FAC115","FAC146","FAC147","FAC148","FAC151"],
+  ACRA_APICAL:["FAC083","FAC084","FAC094","FAC114","FAC115","FAC146","FAC147","FAC148","FAC151"],
+  EUCA_CUTT:["CEP006","CEP111","CEP092","CEP074","CGP105"],
+  EUCA_TC:["TEP006","TEP111","TEP092","TEP074","TGP105"],
+};
+function getClonesFor(sid){return CLONES[sid]||[];}
+function getWeekOfMonth(d){return Math.ceil(new Date(d).getDate()/7);}
+function makeLotId(ds,clone){const d=new Date(ds);return String(d.getFullYear()).slice(-2)+String(d.getMonth()+1).padStart(2,'0')+'W'+getWeekOfMonth(d)+clone;}
+const INPUTS_LIST=[
+  {name:"NPK 10-10-10",unit:"g/L"},{name:"NPK 04-14-08",unit:"g/L"},
+  {name:"Osmocote 15-09-12",unit:"g/L"},{name:"Fungicide (Mancozeb)",unit:"mL/L"},
+  {name:"Insecticide (Imidacloprid)",unit:"mL/L"},{name:"Growth Regulator (IBA)",unit:"mg/L"},
+  {name:"Substrate",unit:"L"},{name:"Vermiculite",unit:"L"},
+  {name:"Carbonized Rice Husk",unit:"L"},{name:"Water",unit:"L"},
+];
+const REASONS=["Mortality (dead)","Contamination","PSQA","Mechanical damage"];
+
+let lots=[],envRecs=[],discards=[],deliveries=[],users=[];
+let view='dashboard',dashNursery='';
+let pForm={},eForm={},dForm={},delForm={},uForm={};
+let eInputs=[];
+
+function spLbl(id){const s=SPECIES.find(e=>e.id===id);return s?s.label:(id||'');}
+function fD(iso){if(!iso)return'';const d=new Date(iso);return d.toLocaleDateString('en-GB',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'});}
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function opts(arr,ph){let h='<option value="">'+(ph||'Select...')+'</option>';arr.forEach(o=>{const v=typeof o==='string'?o:o.value;const l=typeof o==='string'?o:o.label;h+='<option value="'+esc(v)+'">'+esc(l)+'</option>';});return h;}
+function ageWeeks(ds){if(!ds)return 0;return Math.floor((new Date()-new Date(ds))/(7*24*60*60*1000));}
+function visibleNurseries(){return isAdmin()?NURSERIES:[userNursery()];}
+function filterByNursery(arr,key){if(isAdmin())return arr;return arr.filter(r=>(r[key]||'')===userNursery());}
+
+// ── Stock ──
+function getStock(nf){
+  const stock={};
+  let fl=nf?lots.filter(l=>(l.Nursery||'')===nf):lots;
+  if(!isAdmin())fl=fl.filter(l=>(l.Nursery||'')===userNursery());
+  fl.forEach(l=>{const id=l.LotID||'';if(!id)return;stock[id]={lotId:id,nursery:l.Nursery||'',species:l.Species||'',clone:l.Clone||'',date:l.ProductionDate||'',produced:parseInt(l.Quantity)||0,discarded:0,delivered:0};});
+  discards.forEach(d=>{const id=d.LotID||'';if(stock[id])stock[id].discarded+=(parseInt(d.Quantity)||0);});
+  deliveries.forEach(d=>{const id=d.LotID||'';if(stock[id])stock[id].delivered+=(parseInt(d.Quantity)||0);});
+  Object.values(stock).forEach(s=>{s.current=s.produced-s.discarded-s.delivered;s.recovery=s.produced>0?((s.delivered/s.produced)*100).toFixed(1):'0.0';s.age=ageWeeks(s.date);});
+  return Object.values(stock);
+}
+
+// ── Login Screen ──
+function renderLogin(){
+  return '<div class="login-wrap"><div class="login-box"><img src="'+LOGO_SRC+'" alt="APRIL"><h2>NURSERY</h2><div class="sub">MANAGEMENT SYSTEM</div><div class="fd"><label>Workday ID</label><input id="loginWid" placeholder="Enter your Workday number"></div><div class="fd"><label>Password</label><input id="loginPwd" type="password" placeholder="Enter password"></div><button class="btn-s" onclick="handleLogin()">Sign In</button><div id="loginErr" class="err"></div></div></div>';
+}
+async function handleLogin(){
+  const wid=document.getElementById('loginWid').value.trim();
+  const pwd=document.getElementById('loginPwd').value.trim();
+  if(!wid||!pwd){document.getElementById('loginErr').textContent='Please fill both fields';return;}
+  document.getElementById('loginErr').textContent='Signing in...';
+  const res=await doLogin(wid,pwd);
+  if(res.status==='ok'){saveSession(res.user);await loadAllData();renderApp();}
+  else{document.getElementById('loginErr').textContent=res.message||'Login failed';}
+}
+
+// ── Header ──
+function renderHeader(){
+  return '<div class="hdr"><img src="'+LOGO_SRC+'" alt="APRIL"><div class="sep"></div><div><div class="t1">NURSERY</div><div class="t2">MANAGEMENT SYSTEM</div></div><div class="usr"><b>'+esc(currentUser.name)+'</b><br>'+esc(currentUser.nursery)+' | Level '+esc(String(currentUser.level))+'<button class="logout" onclick="logout()">Logout</button></div></div>';
+}
+
+// ── Tabs ──
+function renderTabs(){
+  let ts=[{id:'dashboard',l:'Dashboard'},{id:'production',l:'Production'},{id:'environment',l:'Environment'},{id:'discards',l:'Discards'},{id:'delivery',l:'Delivery'},{id:'stock',l:'Stock'}];
+  if(isAdmin())ts.push({id:'users',l:'Users'});
+  return '<div class="tabs">'+ts.map(t=>'<button class="tab'+(view===t.id?' on':'')+'" onclick="sw(\''+t.id+'\')">'+t.l+'</button>').join('')+'</div>';
+}
+function sw(v){view=v;pForm={nursery:isAdmin()?'':userNursery(),species:'',clone:'',date:'',qty:'',sector:'',bench:'',employee:'',notes:''};eForm={nursery:isAdmin()?'':userNursery(),employee:'',sector:'',bench:'',species:'',gm:'',temp:'',hum:'',light:'',shade:'',notes:''};eInputs=[];dForm={lot:'',nursery:isAdmin()?'':userNursery(),qty:'',reason:'',employee:'',notes:''};delForm={lot:'',nursery:isAdmin()?'':userNursery(),qty:'',client:'',employee:'',notes:''};uForm={wid:'',name:'',pwd:'',nursery:'',level:'2'};dashNursery=isAdmin()?'':userNursery();render();}
+
+function sc(l,v,u,c){return'<div class="sc"><div class="lb">'+l+'</div><span class="vl" style="color:'+c+'">'+v+'</span>'+(u?'<span class="u2">'+u+'</span>':'')+'</div>';}
+
+// ── Dashboard ──
+function rDash(){
+  let h='';
+  if(isAdmin()){
+    h+='<div class="sec" style="padding:12px 18px;margin-bottom:14px"><div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><span style="font-size:12px;font-weight:700;color:var(--sb)">NURSERY:</span><select onchange="dashNursery=this.value;render()" style="padding:8px 12px;background:var(--cd);border:1px solid var(--bd);border-radius:8px;color:var(--tx);font-size:13px;outline:none"><option value="">All Nurseries</option>';
+    NURSERIES.forEach(n=>{h+='<option value="'+esc(n)+'"'+(dashNursery===n?' selected':'')+'>'+esc(n)+'</option>';});
+    h+='</select></div></div>';
+  }
+  const st=getStock(dashNursery||null);
+  const totalProd=st.reduce((s,x)=>s+x.produced,0);const totalDisc=st.reduce((s,x)=>s+x.discarded,0);const totalDel=st.reduce((s,x)=>s+x.delivered,0);const totalStock=st.reduce((s,x)=>s+x.current,0);
+  const mortRate=totalProd?((totalDisc/totalProd)*100).toFixed(1):'0';const recoveryRate=totalProd?((totalDel/totalProd)*100).toFixed(1):'0';
+  h+='<div class="rw">';h+=sc('Lots',st.length,'','var(--vi)');h+=sc('Produced',totalProd,'tubes','var(--gn)');h+=sc('Discarded',totalDisc,'tubes','var(--rd)');h+=sc('Delivered',totalDel,'tubes','var(--sk)');
+  h+='</div><div class="rw">';h+=sc('Stock',totalStock,'tubes','var(--gn)');h+=sc('Mortality',mortRate,'%','var(--rd)');h+=sc('Recovery',recoveryRate,'%','var(--am)');h+=sc('Env Logs',(dashNursery?envRecs.filter(r=>(r.Nursery||'')===dashNursery):filterByNursery(envRecs,'Nursery')).length,'','var(--vi)');
+  h+='</div>';
+  h+='<div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px"><div class="sec" style="flex:1 1 300px;margin-bottom:0"><div class="st">Stock by Species</div><canvas id="ch1" height="180"></canvas></div><div class="sec" style="flex:1 1 300px;margin-bottom:0"><div class="st">Discards by Reason</div><canvas id="ch2" height="180"></canvas></div></div>';
+  return h;
+}
+function buildDashCharts(){
+  const specMap={};getStock(dashNursery||null).forEach(s=>{specMap[s.species]=(specMap[s.species]||0)+s.current;});
+  const c1=document.getElementById('ch1');if(c1&&Object.keys(specMap).length){new Chart(c1,{type:'bar',data:{labels:Object.keys(specMap),datasets:[{data:Object.values(specMap),backgroundColor:'rgba(52,211,117,0.6)',borderColor:'#34D375',borderWidth:1,borderRadius:6}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#567562',font:{size:10}},grid:{color:'#264032'}},y:{ticks:{color:'#567562',font:{size:10}},grid:{color:'#264032'}}}}});}
+  const resMap={};const filtDisc=dashNursery?discards.filter(d=>(d.Nursery||'')===dashNursery):filterByNursery(discards,'Nursery');filtDisc.forEach(d=>{const r=d.Reason||'Unknown';resMap[r]=(resMap[r]||0)+(parseInt(d.Quantity)||0);});
+  const c2=document.getElementById('ch2');const colors=['#EF6B6B','#F5A623','#3BB5E8','#A48BFA','#34D375'];
+  if(c2&&Object.keys(resMap).length){new Chart(c2,{type:'doughnut',data:{labels:Object.keys(resMap),datasets:[{data:Object.values(resMap),backgroundColor:colors.slice(0,Object.keys(resMap).length),borderWidth:0}]},options:{responsive:true,plugins:{legend:{labels:{color:'#88A893',font:{size:11}}}}}});}
+}
+
+// ── Shared form helpers ──
+function fd(label,id,options,val,ph){let h='<div class="fd"><label>'+label+'</label><select onchange="setFd(\''+id+'\',this.value)">'+opts(options,ph)+'</select></div>';setTimeout(()=>{const els=document.querySelectorAll('select');els.forEach(el=>{if(el.getAttribute('onchange')&&el.getAttribute('onchange').includes("'"+id+"'"))el.value=val||'';});},10);return h;}
+function fi(label,id,type,ph,unit,step,val){return'<div class="fd"><label>'+label+'</label><div class="rl"><input type="'+type+'" value="'+esc(val||'')+'" placeholder="'+ph+'" step="'+(step||'')+'" '+(unit?'style="padding-right:46px"':'')+' onchange="setFd(\''+id+'\',this.value)"><'+(unit?'span class="un">'+unit+'</span':'')+'></div></div>';}
+function setFd(id,v){
+  if(id.startsWith('p_')){const k=id.slice(2);pForm[k]=v;if(k==='species')pForm.clone='';}
+  else if(id.startsWith('e_')){const k=id.slice(2);eForm[k]=v;if(k==='species')eForm.gm='';}
+  else if(id.startsWith('d_')){const k=id.slice(2);dForm[k]=v;if(k==='nursery')dForm.lot='';}
+  else if(id.startsWith('del_')){const k=id.slice(4);delForm[k]=v;if(k==='nursery')delForm.lot='';}
+  else if(id.startsWith('u_')){uForm[id.slice(2)]=v;}
+  render();
+}
+
+// ── Production ──
+function rProd(){
+  const cloneList=getClonesFor(pForm.species);const isSeed=pForm.species==='ACRA_SEEDS';const autoLot=(pForm.date&&pForm.clone)?makeLotId(pForm.date,pForm.clone):'';
+  let h='<div class="sec"><div class="st">New Production Lot</div><div class="gr g3">';
+  h+=fd('Nursery','p_nursery',visibleNurseries(),pForm.nursery);
+  h+=fd('Species','p_species',SPECIES.map(s=>({value:s.id,label:s.label+' - '+s.desc})),pForm.species,'Select species...');
+  if(isSeed){h+='<div class="fd"><label>Genetic Material</label><input value="'+esc(pForm.clone||'')+'" placeholder="Type seed lot..." onchange="pForm.clone=this.value;render()"></div>';}
+  else{h+=fd('Genetic Material','p_clone',cloneList,pForm.clone,pForm.species?'Select clone...':'Select species first');}
+  h+='<div class="fd"><label>Production Date</label><input type="date" value="'+esc(pForm.date||'')+'" onchange="pForm.date=this.value;render()"></div>';
+  h+='<div class="fd"><label>Quantity (tubes)</label><input type="number" value="'+esc(pForm.qty||'')+'" placeholder="e.g. 5000" onchange="pForm.qty=this.value"></div>';
+  h+=fd('Sector','p_sector',SECTORS,pForm.sector);h+=fd('Bench','p_bench',BENCHES,pForm.bench);h+=fd('Employee','p_employee',users.filter(u=>!pForm.nursery||u.Nursery===pForm.nursery).map(u=>u.Name),pForm.employee);
+  h+='</div>';
+  if(autoLot)h+='<div style="margin-top:12px;padding:10px 14px;background:var(--gb);border-radius:8px;font-size:13px;color:var(--gn);font-weight:600">Lot ID: '+esc(autoLot)+'</div>';
+  h+='<div class="fd" style="margin-top:12px"><label>Notes</label><textarea placeholder="Optional..." onchange="pForm.notes=this.value">'+esc(pForm.notes||'')+'</textarea></div>';
+  const dis=!pForm.species||!pForm.clone||!pForm.qty||!pForm.date;
+  h+='<button class="btn-s" id="pBtn" '+(dis?'disabled':'')+' onclick="saveProd()">Create Lot</button></div>';
+  h+='<div class="sec"><div class="st">Production History</div>';
+  filterByNursery(lots,'Nursery').slice().reverse().slice(0,20).forEach(l=>{h+='<div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--cd);border-radius:8px;font-size:12px;flex-wrap:wrap;margin-bottom:5px"><span style="color:var(--dm);font-size:10px">'+esc(l.ProductionDate||'')+'</span><span class="ba bg">'+esc(l.LotID||'')+'</span>'+(l.Nursery?'<span class="ba bs">'+esc(l.Nursery)+'</span>':'')+'<span>'+esc(l.Clone||'')+'</span><span style="color:var(--gn);font-weight:600">'+esc(l.Quantity||'')+' tubes</span></div>';});
+  h+='</div>';return h;
+}
+async function saveProd(){const lotId=makeLotId(pForm.date,pForm.clone);const rec={_tab:'Production',LotID:lotId,Nursery:pForm.nursery,Species:spLbl(pForm.species),Clone:pForm.clone,ProductionDate:pForm.date,Quantity:pForm.qty,Sector:pForm.sector,Bench:pForm.bench,Employee:pForm.employee,Notes:pForm.notes,Timestamp:new Date().toISOString()};lots.push(rec);cloudPost(rec);const b=document.getElementById('pBtn');b.className='btn-s ok';b.textContent='\u2713 Lot Created! ('+lotId+')';setTimeout(()=>{sw('production');},2000);}
+
+// ── Environment ──
+function rEnv(){
+  const eCloneList=getClonesFor(eForm.species);const eIsSeed=eForm.species==='ACRA_SEEDS';
+  let h='<div class="sec"><div class="st">Environmental Log</div><div class="gr g3">';
+  h+=fd('Nursery','e_nursery',visibleNurseries(),eForm.nursery);h+=fd('Employee','e_employee',users.filter(u=>!eForm.nursery||u.Nursery===eForm.nursery).map(u=>u.Name),eForm.employee);
+  h+=fd('Sector','e_sector',SECTORS,eForm.sector);h+=fd('Bench','e_bench',BENCHES,eForm.bench);
+  h+=fd('Species','e_species',SPECIES.map(s=>({value:s.id,label:s.label+' - '+s.desc})),eForm.species,'Select...');
+  if(eIsSeed){h+='<div class="fd"><label>Genetic Material</label><input value="'+esc(eForm.gm||'')+'" placeholder="Type seed lot..." onchange="eForm.gm=this.value"></div>';}
+  else{h+=fd('Genetic Material','e_gm',eCloneList,eForm.gm,eForm.species?'Select clone...':'Select species first');}
+  h+='</div></div>';
+  h+='<div class="sec"><div class="st">Variables</div><div class="gr g3">';
+  h+=fi('Temperature','e_temp','number','e.g. 28.5','\u00B0C','0.1',eForm.temp);h+=fi('Humidity','e_hum','number','e.g. 75','%','0.1',eForm.hum);h+=fi('Light','e_light','number','e.g. 15000','lux','1',eForm.light);h+=fd('Shade-net','e_shade',['Extended','Retracted'],eForm.shade);
+  h+='</div></div>';
+  h+='<div class="sec"><div class="st">Inputs Used</div><div class="gr gi"><div class="fd"><label>Input</label><select id="eiN">'+opts(INPUTS_LIST.map(i=>({value:i.name,label:i.name+' ('+i.unit+')'})))+'</select></div><div class="fd"><label>Qty</label><input id="eiQ" type="number" step="0.1" placeholder="0"></div><button class="btn btn-p" style="height:40px" onclick="addEI()">+</button></div>';
+  if(eInputs.length){h+='<div style="margin-top:10px">';eInputs.forEach((x,i)=>{h+='<div class="ir"><span>'+esc(x.name)+'</span><span><span style="color:var(--gn);font-weight:600">'+esc(x.qty)+' '+esc(x.unit)+'</span> <button onclick="eInputs.splice('+i+',1);render()" style="background:none;border:none;color:var(--rd);cursor:pointer;font-weight:700">x</button></span></div>';});h+='</div>';}
+  h+='</div>';
+  h+='<div class="sec"><div class="st">Notes</div><div class="fd"><textarea placeholder="Observations..." onchange="eForm.notes=this.value">'+esc(eForm.notes||'')+'</textarea></div></div>';
+  const dis=!eForm.employee||!eForm.sector;h+='<button class="btn-s" id="eBtn" '+(dis?'disabled':'')+' onclick="saveEnv()">Save Record</button>';return h;
+}
+function addEI(){const n=document.getElementById('eiN'),q=document.getElementById('eiQ');if(!n.value||!q.value)return;const info=INPUTS_LIST.find(i=>i.name===n.value);eInputs.push({name:n.value,qty:q.value,unit:info?info.unit:''});n.value='';q.value='';render();}
+async function saveEnv(){const inp=eInputs.map(i=>i.name+':'+i.qty+i.unit).join('; ');const rec={_tab:'Environmental',Timestamp:new Date().toISOString(),Nursery:eForm.nursery,Employee:eForm.employee,Sector:eForm.sector,Bench:eForm.bench,Species:spLbl(eForm.species),Clone:eForm.gm,Temperature:eForm.temp,Humidity:eForm.hum,Light:eForm.light,ShadeNet:eForm.shade,Inputs:inp,Notes:eForm.notes};envRecs.push(rec);cloudPost(rec);const b=document.getElementById('eBtn');b.className='btn-s ok';b.textContent='\u2713 Saved!';setTimeout(()=>{sw('environment');},1500);}
+
+// ── Discards ──
+function rDisc(){
+  const st=getStock();const fs=st.filter(s=>s.current>0&&(!dForm.nursery||s.nursery===dForm.nursery));const lotOpts=fs.map(s=>({value:s.lotId,label:s.lotId+' (bal: '+s.current+')'}));
+  let h='<div class="sec"><div class="st">Register Discard</div><div class="gr g3">';
+  h+=fd('Nursery','d_nursery',visibleNurseries(),dForm.nursery);h+=fd('Lot','d_lot',lotOpts,dForm.lot,dForm.nursery?'Select lot...':'Select nursery first');
+  h+='<div class="fd"><label>Qty Discarded</label><input type="number" value="'+esc(dForm.qty||'')+'" placeholder="e.g. 200" onchange="dForm.qty=this.value"></div>';
+  h+=fd('Reason','d_reason',REASONS,dForm.reason);h+=fd('Employee','d_employee',users.filter(u=>!dForm.nursery||u.Nursery===dForm.nursery).map(u=>u.Name),dForm.employee);
+  h+='</div><div class="fd" style="margin-top:12px"><label>Notes</label><textarea placeholder="Optional..." onchange="dForm.notes=this.value">'+esc(dForm.notes||'')+'</textarea></div>';
+  const dis=!dForm.lot||!dForm.qty||!dForm.reason;h+='<button class="btn-s" id="dBtn" '+(dis?'disabled':'')+' onclick="saveDisc()">Register Discard</button></div>';
+  h+='<div class="sec"><div class="st">Discard History</div>';
+  filterByNursery(discards,'Nursery').slice().reverse().slice(0,20).forEach(d=>{h+='<div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--cd);border-radius:8px;font-size:12px;flex-wrap:wrap;margin-bottom:5px"><span style="color:var(--dm);font-size:10px">'+fD(d.Timestamp||'')+'</span><span class="ba bg">'+esc(d.LotID||'')+'</span><span class="ba br">'+esc(d.Reason||'')+'</span><span style="color:var(--rd);font-weight:600">-'+esc(d.Quantity||'')+' tubes</span></div>';});
+  h+='</div>';return h;
+}
+async function saveDisc(){
+  const st=getStock();const lot=st.find(s=>s.lotId===dForm.lot);
+  const qty=parseInt(dForm.qty)||0;
+  if(lot&&qty>lot.current){alert('Cannot discard '+qty+' tubes. Current stock for this lot is only '+lot.current+' tubes.');return;}
+  const rec={_tab:'Discards',Timestamp:new Date().toISOString(),LotID:dForm.lot,Nursery:dForm.nursery,Quantity:dForm.qty,Reason:dForm.reason,Employee:dForm.employee,Notes:dForm.notes};discards.push(rec);cloudPost(rec);const b=document.getElementById('dBtn');b.className='btn-s ok';b.textContent='\u2713 Registered!';setTimeout(()=>{sw('discards');},1500);
+}
+
+// ── Delivery ──
+function rDel(){
+  const st=getStock();const fs=st.filter(s=>s.current>0&&(!delForm.nursery||s.nursery===delForm.nursery));const lotOpts=fs.map(s=>({value:s.lotId,label:s.lotId+' (bal: '+s.current+')'}));
+  let h='<div class="sec"><div class="st">Register Delivery</div><div class="gr g3">';
+  h+=fd('Nursery','del_nursery',visibleNurseries(),delForm.nursery);h+=fd('Lot','del_lot',lotOpts,delForm.lot,delForm.nursery?'Select lot...':'Select nursery first');
+  h+='<div class="fd"><label>Qty Delivered</label><input type="number" value="'+esc(delForm.qty||'')+'" placeholder="e.g. 3000" onchange="delForm.qty=this.value"></div>';
+  h+='<div class="fd"><label>Client / Destination</label><input value="'+esc(delForm.client||'')+'" placeholder="e.g. Estate Block A" onchange="delForm.client=this.value"></div>';
+  h+=fd('Employee','del_employee',users.filter(u=>!delForm.nursery||u.Nursery===delForm.nursery).map(u=>u.Name),delForm.employee);
+  h+='</div><div class="fd" style="margin-top:12px"><label>Notes</label><textarea placeholder="Optional..." onchange="delForm.notes=this.value">'+esc(delForm.notes||'')+'</textarea></div>';
+  const dis=!delForm.lot||!delForm.qty;h+='<button class="btn-s" id="delBtn" '+(dis?'disabled':'')+' onclick="saveDel()">Register Delivery</button></div>';
+  h+='<div class="sec"><div class="st">Delivery History</div>';
+  if(!filterByNursery(deliveries,'Nursery').length)h+='<div style="color:var(--dm);font-size:13px">No deliveries yet</div>';
+  filterByNursery(deliveries,'Nursery').slice().reverse().slice(0,20).forEach(d=>{h+='<div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--cd);border-radius:8px;font-size:12px;flex-wrap:wrap;margin-bottom:5px"><span style="color:var(--dm);font-size:10px">'+fD(d.Timestamp||'')+'</span><span class="ba bg">'+esc(d.LotID||'')+'</span>'+(d.Client?'<span class="ba bam">'+esc(d.Client)+'</span>':'')+'<span style="color:var(--sk);font-weight:600">'+esc(d.Quantity||'')+' tubes</span></div>';});
+  h+='</div>';return h;
+}
+async function saveDel(){
+  const st=getStock();const lot=st.find(s=>s.lotId===delForm.lot);
+  const qty=parseInt(delForm.qty)||0;
+  if(lot&&qty>lot.current){alert('Cannot deliver '+qty+' tubes. Current stock for this lot is only '+lot.current+' tubes.');return;}
+  const rec={_tab:'Deliveries',Timestamp:new Date().toISOString(),LotID:delForm.lot,Nursery:delForm.nursery,Quantity:delForm.qty,Client:delForm.client,Employee:delForm.employee,Notes:delForm.notes};deliveries.push(rec);cloudPost(rec);const b=document.getElementById('delBtn');b.className='btn-s ok';b.textContent='\u2713 Delivered!';setTimeout(()=>{sw('delivery');},1500);
+}
+
+// ── Stock ──
+function rStock(){
+  const st=getStock();if(!st.length)return'<div class="emp"><div style="font-size:48px;opacity:0.25;margin-bottom:16px">\uD83D\uDCE6</div><div style="font-size:16px;font-weight:600">No stock data</div></div>';
+  let h='<div class="sec"><div class="st">Stock Summary</div><div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:11px"><tr style="border-bottom:1px solid var(--bd);text-align:left">';
+  ['Lot ID','Species','Clone','Age','Produced','Discarded','Delivered','Stock','Recovery'].forEach(c=>{h+='<th style="padding:7px 8px;color:var(--sb);font-size:9px;text-transform:uppercase;font-weight:700">'+c+'</th>';});
+  h+='</tr>';
+  st.forEach(s=>{const sC=s.current<=0?'var(--rd)':s.current<s.produced*0.3?'var(--am)':'var(--gn)';const rC=parseFloat(s.recovery)>=70?'var(--gn)':parseFloat(s.recovery)>=40?'var(--am)':'var(--rd)';const aC=s.age>12?'var(--rd)':s.age>8?'var(--am)':'var(--gn)';
+    h+='<tr style="border-bottom:1px solid var(--bd)"><td style="padding:7px 8px"><span class="ba bg" style="font-size:9px">'+esc(s.lotId)+'</span></td><td style="padding:7px 8px">'+esc(s.species)+'</td><td style="padding:7px 8px">'+esc(s.clone)+'</td><td style="padding:7px 8px;font-weight:700;color:'+aC+'">'+s.age+'w</td><td style="padding:7px 8px;color:var(--gn)">'+s.produced+'</td><td style="padding:7px 8px;color:var(--rd)">'+s.discarded+'</td><td style="padding:7px 8px;color:var(--sk)">'+s.delivered+'</td><td style="padding:7px 8px;font-weight:700;color:'+sC+'">'+s.current+'</td><td style="padding:7px 8px;font-weight:700;color:'+rC+'">'+s.recovery+'%</td></tr>';});
+  h+='</table></div></div>';
+  h+='<div style="text-align:center;margin-top:8px"><button class="btn-e" onclick="exportStock()">Export CSV</button></div>';return h;
+}
+function exportStock(){const st=getStock();if(!st.length)return;let csv='\uFEFF'+'LotID,Species,Clone,Age(weeks),Produced,Discarded,Delivered,Stock,Recovery%\n';st.forEach(s=>{csv+='"'+s.lotId+'","'+s.species+'","'+s.clone+'",'+s.age+','+s.produced+','+s.discarded+','+s.delivered+','+s.current+','+s.recovery+'\n';});try{const b=new Blob([csv],{type:'text/csv;charset=utf-8'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download='stock-'+new Date().toISOString().slice(0,10)+'.csv';document.body.appendChild(a);a.click();document.body.removeChild(a);}catch(e){window.open('data:text/csv;charset=utf-8,'+encodeURIComponent(csv),'_blank');}}
+
+// ── Users (Admin only) ──
+function rUsers(){
+  if(!isAdmin())return'<div class="emp">Access denied</div>';
+  let h='<div class="sec"><div class="st">Register New User</div><div class="gr g3">';
+  h+='<div class="fd"><label>Workday ID</label><input value="'+esc(uForm.wid||'')+'" placeholder="e.g. 12345" onchange="uForm.wid=this.value"></div>';
+  h+='<div class="fd"><label>Full Name</label><input value="'+esc(uForm.name||'')+'" placeholder="e.g. John Smith" onchange="uForm.name=this.value"></div>';
+  h+='<div class="fd"><label>Password</label><input value="'+esc(uForm.pwd||'')+'" placeholder="Set password" onchange="uForm.pwd=this.value"></div>';
+  h+=fd('Nursery','u_nursery',NURSERIES,uForm.nursery);
+  h+=fd('Access Level','u_level',[{value:'1',label:'Level 1 - Admin (all nurseries)'},{value:'2',label:'Level 2 - Operator (own nursery)'}],uForm.level);
+  h+='</div>';
+  const dis=!uForm.wid||!uForm.name||!uForm.pwd||!uForm.nursery;
+  h+='<button class="btn-s" id="uBtn" '+(dis?'disabled':'')+' onclick="saveUser()">Create User</button></div>';
+  h+='<div class="sec"><div class="st">All Users ('+users.length+')</div>';
+  h+='<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px"><tr style="border-bottom:1px solid var(--bd)">';
+  ['Workday','Name','Nursery','Level','Actions'].forEach(c=>{h+='<th style="padding:8px 10px;color:var(--sb);font-size:10px;text-transform:uppercase;font-weight:700;text-align:left">'+c+'</th>';});h+='</tr>';
+  users.forEach(u=>{
+    h+='<tr style="border-bottom:1px solid var(--bd)"><td style="padding:8px 10px">'+esc(String(u.WorkdayID))+'</td><td style="padding:8px 10px">'+esc(u.Name||'')+'</td><td style="padding:8px 10px"><span class="ba bs">'+esc(u.Nursery||'')+'</span></td><td style="padding:8px 10px"><span class="ba '+(String(u.Level)==='1'?'bv':'bg')+'">Level '+esc(String(u.Level))+'</span></td><td style="padding:8px 10px"><button class="btn-d" onclick="delUser(\''+esc(String(u.WorkdayID))+'\')">Delete</button></td></tr>';
+  });
+  h+='</table></div></div>';return h;
+}
+async function saveUser(){const rec={_tab:'Users',WorkdayID:uForm.wid,Name:uForm.name,Password:uForm.pwd,Nursery:uForm.nursery,Level:uForm.level,Active:'YES'};users.push(rec);cloudPost(rec);const b=document.getElementById('uBtn');b.className='btn-s ok';b.textContent='\u2713 User Created!';setTimeout(()=>{uForm={wid:'',name:'',pwd:'',nursery:'',level:'2'};render();},1500);}
+async function delUser(wid){if(!confirm('Delete user '+wid+'?'))return;await deleteUser(wid);users=users.filter(u=>String(u.WorkdayID)!==String(wid));render();}
+
+// ── Render ──
+function render(){
+  const el=document.getElementById('ct');if(!el)return;
+  if(view==='dashboard'){el.innerHTML=rDash();setTimeout(buildDashCharts,50);}
+  else if(view==='production')el.innerHTML=rProd();
+  else if(view==='environment')el.innerHTML=rEnv();
+  else if(view==='discards')el.innerHTML=rDisc();
+  else if(view==='delivery')el.innerHTML=rDel();
+  else if(view==='stock')el.innerHTML=rStock();
+  else if(view==='users')el.innerHTML=rUsers();
+}
+
+function renderApp(){
+  const app=document.getElementById('app');
+  if(!currentUser){app.innerHTML=renderLogin();return;}
+  app.innerHTML=renderHeader()+renderTabs()+'<div class="ct" id="ct"></div>';
+  render();
+}
+
+async function loadAllData(){
+  const[p,e,d,del]=await Promise.all([cloudGet('Production'),cloudGet('Environmental'),cloudGet('Discards'),cloudGet('Deliveries')]);
+  lots=p||[];envRecs=e||[];discards=d||[];deliveries=del||[];
+  users=[{WorkdayID:'20088744',Name:'Rodrigo',Nursery:'KCN2',Level:'1'}];
+}
+
+// ── Init ──
+async function init(){
+  loadSession();
+  if(currentUser){await loadAllData();dashNursery=isAdmin()?'':userNursery();}
+  renderApp();
+}
+init();
+</script>
+</body>
+</html>
